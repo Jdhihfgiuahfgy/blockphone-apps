@@ -2,6 +2,19 @@
   "name": "BlockPhone — официальный каталог",
   "apps": [
     {
+      "id": "blockblast",
+      "name": "Block Blast",
+      "version": "1.0.0",
+      "author": "Custom",
+      "description": "",
+      "permissions": [
+        "storage"
+      ],
+      "download": "apps/blockblast.zip",
+      "size": 4829,
+      "sha256": "867217e21799bc71a05bb35492cbfd5b49c16dbedee7449a5138fb1df6fecf4e"
+    },
+    {
       "id": "doom",
       "name": "DOOM",
       "version": "2.0",
@@ -12,7 +25,7 @@
       ],
       "download": "apps/doom.zip",
       "size": 190928,
-      "sha256": "26de0ac7370ceeb1296af22e4bbd76af66dd075da1d246ecc8d060698d2453a8"
+      "sha256": "8f5d0e0e23e4aeda76a8d5dfb3ecda97753019d0babb074735e9375534bc8494"
     },
     {
       "id": "snake",
@@ -25,7 +38,7 @@
       ],
       "download": "apps/snake.zip",
       "size": 2014,
-      "sha256": "8ad2467a7aa9f61a49918447f6976c237bf5c77bbd053164b0de321ef8817bec"
+      "sha256": "ec2d91e04b9ad688c1d6ec86b97699d54030e9dc452a7b27bfd1214b53734fd6"
     },
     {
       "id": "tictactoe",
@@ -38,7 +51,7 @@
       ],
       "download": "apps/tictactoe.zip",
       "size": 2383,
-      "sha256": "4cd83c1f16595544ed45a049f158d51d2d49570f04bff8cc24488415f3bbbfba"
+      "sha256": "49ce0e7c965e3ddf5fe44d6aea23cb285d9c02f7deaa016c0d7b500bf1190d71"
     },
     {
       "id": "weather-web",
@@ -52,7 +65,7 @@
       ],
       "download": "apps/weather-web.zip",
       "size": 1495,
-      "sha256": "aabcac441fc10c75b4bb1dbaeaad5114e7533c9fa4b8356d9bc8a94bdbf3ac85"
+      "sha256": "73e0a7492de93d168d7e831c6a33ffd95698521c27eaaf00034ed51c0a323277"
     }
   ]
 }
