@@ -51,9 +51,38 @@ def read_app(path):
     return files
 
 
+def fingerprints(files):
+    """Отпечатки файлов кода и моделей (заметного размера) — по ним находятся копии чужих приложений."""
+    return {hashlib.sha256(data).hexdigest(): name for name, data in files.items()
+            if os.path.splitext(name)[1].lower() in (".lua", ".obj") and len(data) >= 300}
+
+
+def find_copies():
+    """Пары приложений с одинаковыми файлами кода — копия (одно из них прислано под чужим именем)."""
+    prints = {}
+    problems = []
+    for file in sorted(os.listdir("apps-src")) if os.path.isdir("apps-src") else []:
+        if file.endswith(".zip"):
+            try:
+                prints[file[:-4]] = fingerprints(read_app(os.path.join("apps-src", file)))
+            except Exception:  # noqa: BLE001 — битый архив покажет основная проверка
+                pass
+    ids = sorted(prints)
+    for i, a in enumerate(ids):
+        for b in ids[i + 1:]:
+            same = set(prints[a]) & set(prints[b])
+            if same:
+                problems.append("%s and %s share code (%s) — looks like a copy" % (a, b, prints[a][next(iter(same))]))
+    return problems
+
+
 def main():
     check = "--check" in sys.argv
     apps, errors = [], []
+    if check:
+        for problem in find_copies():
+            errors.append(problem)
+            print("ERROR", problem)
     os.makedirs("apps", exist_ok=True)
     os.makedirs("icons", exist_ok=True)
     for file in sorted(os.listdir("apps-src")) if os.path.isdir("apps-src") else []:
