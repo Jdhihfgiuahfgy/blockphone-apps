@@ -1,0 +1,14 @@
+# Проверка заявки (Pull Request): архив приложения в порядке? Результат — у заявки, «Check submission».
+name: Check submission
+on:
+  pull_request:
+    paths: ["apps-src/**"]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python build_catalog.py --check
