@@ -12,7 +12,22 @@
       ],
       "download": "apps/blockblast.zip",
       "size": 4829,
-      "sha256": "867217e21799bc71a05bb35492cbfd5b49c16dbedee7449a5138fb1df6fecf4e"
+      "sha256": "6be0c59c5dbc4fa94afaf730280e0e351df079fe7f8e40c1354d38de1af56af5"
+    },
+    {
+      "id": "blockstrike",
+      "name": "Block Strike",
+      "version": "1.0",
+      "author": "BlockPhone",
+      "description": "Командный 3D-шутер по мотивам CS: закладка бомбы, 13 видов оружия, гранаты, 4 карты, боты и игра по сети.",
+      "permissions": [
+        "storage",
+        "multiplayer"
+      ],
+      "download": "apps/blockstrike.zip",
+      "size": 135811,
+      "sha256": "5ada3969a154c7dbe2d7dba11b59e28488986ca6eb68fe4a42a83a9983fb3dbd",
+      "icon": "icons/blockstrike.png"
     },
     {
       "id": "doom",
@@ -25,7 +40,7 @@
       ],
       "download": "apps/doom.zip",
       "size": 190928,
-      "sha256": "8f5d0e0e23e4aeda76a8d5dfb3ecda97753019d0babb074735e9375534bc8494"
+      "sha256": "75ead970114e22d3249e1c6fbed983799638d2377cf3e6aa691e345371132fb0"
     },
     {
       "id": "snake",
@@ -38,7 +53,7 @@
       ],
       "download": "apps/snake.zip",
       "size": 2014,
-      "sha256": "ec2d91e04b9ad688c1d6ec86b97699d54030e9dc452a7b27bfd1214b53734fd6"
+      "sha256": "a2920afa4e4b0489b2735814d53dca6429e403c4327676349c37245a0ac911af"
     },
     {
       "id": "tictactoe",
@@ -51,7 +66,7 @@
       ],
       "download": "apps/tictactoe.zip",
       "size": 2383,
-      "sha256": "49ce0e7c965e3ddf5fe44d6aea23cb285d9c02f7deaa016c0d7b500bf1190d71"
+      "sha256": "966351960070d9d41397286538f9f9026def4d6ee54f3cda6067075d709f9312"
     },
     {
       "id": "weather-web",
@@ -65,7 +80,7 @@
       ],
       "download": "apps/weather-web.zip",
       "size": 1495,
-      "sha256": "73e0a7492de93d168d7e831c6a33ffd95698521c27eaaf00034ed51c0a323277"
+      "sha256": "010499deb0822aa3f87f0e6ca7ea12ef7a703aab98704466fe8e400c40473e83"
     }
   ]
 }
