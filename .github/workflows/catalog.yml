@@ -1,0 +1,24 @@
+# После одобрения заявки (Merge) или своей загрузки в apps-src — пересобрать catalog.json.
+name: Build catalog
+on:
+  push:
+    branches: [main]
+    paths: ["apps-src/**", "build_catalog.py"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python build_catalog.py
+      - run: |
+          git config user.name "blockphone-bot"
+          git config user.email "blockphone-bot@users.noreply.github.com"
+          git add catalog.json apps icons
+          git diff --cached --quiet || git commit -m "Каталог обновлён"
+          git push
