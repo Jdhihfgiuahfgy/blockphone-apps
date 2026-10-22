@@ -76,6 +76,27 @@ def find_copies():
     return problems
 
 
+def build_reviews_summary():
+    """reviews/summary.json: {id: {avg, count}} по файлам reviews/<id>.json (их пишет приёмник)."""
+    if not os.path.isdir("reviews"):
+        return
+    summary = {}
+    for file in sorted(os.listdir("reviews")):
+        if not file.endswith(".json") or file == "summary.json":
+            continue
+        try:
+            with open(os.path.join("reviews", file), encoding="utf-8") as f:
+                reviews = json.load(f).get("reviews", [])
+            stars = [int(r["stars"]) for r in reviews if 1 <= int(r.get("stars", 0)) <= 5]
+            if stars:
+                summary[file[:-5]] = {"avg": round(sum(stars) / len(stars), 2), "count": len(stars)}
+        except Exception as e:  # noqa: BLE001 — испорченный файл отзывов не ломает каталог
+            print("ERROR reviews", file, e)
+    with open(os.path.join("reviews", "summary.json"), "w", encoding="utf-8") as f:
+        json.dump(summary, f, ensure_ascii=False, indent=1)
+    print("reviews/summary.json:", len(summary), "apps")
+
+
 def main():
     check = "--check" in sys.argv
     apps, errors = [], []
@@ -130,6 +151,7 @@ def main():
             print("ERROR", file, e)
     if check:
         sys.exit(1 if errors else 0)
+    build_reviews_summary()
     with open("catalog.json", "w", encoding="utf-8") as f:
         json.dump({"name": "BlockPhone — официальный каталог", "apps": apps}, f, ensure_ascii=False, indent=2)
     print("catalog.json:", len(apps), "apps,", len(errors), "errors")

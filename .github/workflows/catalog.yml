@@ -1,9 +1,10 @@
+# Сводку оценок (reviews/summary.json) — тоже, после каждого нового отзыва.
 # После одобрения заявки (Merge) или своей загрузки в apps-src — пересобрать catalog.json.
 name: Build catalog
 on:
   push:
     branches: [main]
-    paths: ["apps-src/**", "build_catalog.py"]
+    paths: ["apps-src/**", "reviews/**", "build_catalog.py"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -19,6 +20,8 @@ jobs:
       - run: |
           git config user.name "blockphone-bot"
           git config user.email "blockphone-bot@users.noreply.github.com"
-          git add catalog.json apps icons
+          mkdir -p reviews
+          git add catalog.json apps icons reviews/summary.json
           git diff --cached --quiet || git commit -m "Каталог обновлён"
-          git push
+          # Пока шла сборка, приёмник мог записать новый отзыв — подтянуть и повторить.
+          for i in 1 2 3; do git push && break; git pull --rebase; done
