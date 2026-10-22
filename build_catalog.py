@@ -78,8 +78,7 @@ def find_copies():
 
 def build_reviews_summary():
     """reviews/summary.json: {id: {avg, count}} по файлам reviews/<id>.json (их пишет приёмник)."""
-    if not os.path.isdir("reviews"):
-        return
+    os.makedirs("reviews", exist_ok=True)
     summary = {}
     for file in sorted(os.listdir("reviews")):
         if not file.endswith(".json") or file == "summary.json":
