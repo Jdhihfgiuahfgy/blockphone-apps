@@ -1,0 +1,13 @@
+{
+ "reviews": [
+  {
+   "uuid": "blockphonetest",
+   "player": "BlockPhoneTest",
+   "stars": 5,
+   "text": "test",
+   "version": "1.0",
+   "time": 1792682660749,
+   "ip": "35e7a22d6cfe7d7540b0a69f"
+  }
+ ]
+}
