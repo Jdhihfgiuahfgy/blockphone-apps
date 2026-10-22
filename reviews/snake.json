@@ -1,6 +1,15 @@
 {
  "reviews": [
   {
+   "uuid": "blockphonetest",
+   "player": "BlockPhoneTest",
+   "stars": 5,
+   "text": "test",
+   "version": "1.0",
+   "time": 1792682708319,
+   "ip": "899f3ce9dd283796603074fe"
+  },
+  {
    "uuid": "othernick",
    "player": "OtherNick",
    "stars": 1,
@@ -8,15 +17,6 @@
    "version": "1.0",
    "time": 1792682666278,
    "ip": "35e7a22d6cfe7d7540b0a69f"
-  },
-  {
-   "uuid": "blockphonetest",
-   "player": "BlockPhoneTest",
-   "stars": 4,
-   "text": "test 2",
-   "version": "1.0",
-   "time": 1792682663495,
-   "ip": "899f3ce9dd283796603074fe"
   }
  ]
 }
