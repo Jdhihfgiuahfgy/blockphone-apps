@@ -1,10 +1,1 @@
-{
- "snake": {
-  "avg": 3.0,
-  "count": 2
- },
- "tictactoe": {
-  "avg": 5.0,
-  "count": 1
- }
-}
+{}
