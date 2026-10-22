@@ -13,7 +13,7 @@ import re
 import sys
 import zipfile
 
-ALLOWED = {".json", ".lua", ".png", ".obj", ".txt", ".md"}
+ALLOWED = {".json", ".lua", ".png", ".obj", ".txt", ".md", ".ogg", ".wav", ".mp3"}
 MAX_UNPACKED = 40 * 1024 * 1024
 ID = re.compile(r"^[a-z0-9_-]{1,32}$")
 
