@@ -17,7 +17,7 @@
     {
       "id": "blockstrike",
       "name": "Block Strike",
-      "version": "1.0",
+      "version": "1.1",
       "author": "BlockPhone",
       "description": "Командный 3D-шутер по мотивам CS: закладка бомбы, 13 видов оружия, гранаты, 4 карты, боты и игра по сети.",
       "permissions": [
@@ -25,8 +25,8 @@
         "multiplayer"
       ],
       "download": "apps/blockstrike.zip",
-      "size": 135811,
-      "sha256": "62403b8f8e8c68de529b3e3794a2b9b8c8335b08f2f3ce83bcb09d766464a122",
+      "size": 1099261,
+      "sha256": "12ceab4e279f1ed5337666de1eb1b6553882100e4d8073f6549a7bcb789c3f95",
       "icon": "icons/blockstrike.png"
     },
     {
