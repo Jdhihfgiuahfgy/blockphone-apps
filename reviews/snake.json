@@ -1,6 +1,15 @@
 {
  "reviews": [
   {
+   "uuid": "othernick",
+   "player": "OtherNick",
+   "stars": 1,
+   "text": "spam",
+   "version": "1.0",
+   "time": 1792682666278,
+   "ip": "35e7a22d6cfe7d7540b0a69f"
+  },
+  {
    "uuid": "blockphonetest",
    "player": "BlockPhoneTest",
    "stars": 4,
