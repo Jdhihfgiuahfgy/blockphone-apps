@@ -12,7 +12,7 @@
       ],
       "download": "apps/blockblast.zip",
       "size": 4829,
-      "sha256": "0643fd0bdcddaedf800a3c51917a61fd74f8f2ef42d9828c92143abb4bea250d"
+      "sha256": "8bdadbb375672f351362c03864b45fb7a20e990708af5acc7bc69285a73bd482"
     },
     {
       "id": "blockstrike",
@@ -26,7 +26,7 @@
       ],
       "download": "apps/blockstrike.zip",
       "size": 135811,
-      "sha256": "d0613c158cb6b868ce5e4fabb1e72ab0724a4c462d48a01c6181235f3690e7c7",
+      "sha256": "011949b211989610a14c1454b133e2bbffc6e2e902e0c2ef48e05a899793c812",
       "icon": "icons/blockstrike.png"
     },
     {
@@ -40,7 +40,7 @@
       ],
       "download": "apps/doom.zip",
       "size": 190928,
-      "sha256": "a378fe18250703deb7a8cdc75ebbdcad8fd3b6f44f2fd78b81d55e0e55dcdd58"
+      "sha256": "88583f0b99b659bc80d14d2d0be4f90343f33949c18c8590cf7784136f1c4507"
     },
     {
       "id": "snake",
@@ -53,7 +53,7 @@
       ],
       "download": "apps/snake.zip",
       "size": 2014,
-      "sha256": "36631f895576b3fc85c4d164535ee3337672163ad2b6b48419d07e6f06e61a97"
+      "sha256": "c2237dd068c3ff0f79f0d967267085cc59365f8845a31f806c4543f17068eff2"
     },
     {
       "id": "tictactoe",
@@ -66,7 +66,7 @@
       ],
       "download": "apps/tictactoe.zip",
       "size": 2383,
-      "sha256": "e78b690255e9e137f016a1096651180056096f72555b32592d04ac38d1c7e864"
+      "sha256": "72278e4b1e1793500c7603fc663471a2e84ea46e795ac6d15d5a0a5312289b83"
     },
     {
       "id": "weather-web",
@@ -80,7 +80,7 @@
       ],
       "download": "apps/weather-web.zip",
       "size": 1495,
-      "sha256": "d8219dc359cb87e9c4486fddfe23db1bdfa5efdaf70e61cfb872fcc90146e764"
+      "sha256": "8b6375f1d27b4ba4061457fcecd014eb8557ace1dfd5ce41bec70666c22541e5"
     }
   ]
 }
