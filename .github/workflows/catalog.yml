@@ -8,6 +8,10 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+# Сборки — строго по очереди (два отзыва подряд запускают две).
+concurrency:
+  group: catalog
+  cancel-in-progress: false
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,5 +27,13 @@ jobs:
           mkdir -p reviews
           git add catalog.json apps icons reviews/summary.json
           git diff --cached --quiet || git commit -m "Каталог обновлён"
-          # Пока шла сборка, приёмник мог записать новый отзыв — подтянуть и повторить.
-          for i in 1 2 3; do git push && break; git pull --rebase; done
+          # Пока шла сборка, приёмник мог записать новый отзыв — взять свежий main и собрать заново.
+          for i in 1 2 3 4; do
+            git push && exit 0
+            git fetch origin main && git reset --hard origin/main
+            python build_catalog.py
+            git add catalog.json apps icons reviews/summary.json
+            git diff --cached --quiet && exit 0
+            git commit -m "Каталог обновлён"
+          done
+          exit 1

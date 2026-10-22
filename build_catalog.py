@@ -124,7 +124,10 @@ def main():
             buf = io.BytesIO()
             with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
                 for name in sorted(files):
-                    z.writestr(name, files[name])
+                    # Постоянная дата внутри архива: одинаковое приложение — одинаковый zip (без лишних изменений).
+                    info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+                    info.compress_type = zipfile.ZIP_DEFLATED
+                    z.writestr(info, files[name])
             data = buf.getvalue()
             with open(os.path.join("apps", app_id + ".zip"), "wb") as f:
                 f.write(data)

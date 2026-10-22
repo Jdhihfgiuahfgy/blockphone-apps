@@ -1,0 +1,7 @@
+# Выкладка «приёмника» в Cloudflare одной командой (из этой папки): wrangler deploy
+# Переменные REPO_OWNER, REPO_NAME и секрет GITHUB_TOKEN задаются на сайте Cloudflare и при выкладке не трогаются.
+name = "blockphone-store"
+main = "worker.js"
+compatibility_date = "2026-10-21"
+keep_vars = true
+preview_urls = false

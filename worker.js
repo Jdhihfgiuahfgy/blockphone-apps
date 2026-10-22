@@ -7,9 +7,10 @@
 //   REPO_OWNER   — ник на GitHub (Jdhihfgiuahfgy)
 //   REPO_NAME    — имя репозитория (blockphone-apps)
 //
-// Отзывы: POST /review (JSON: app, stars 1..5, text, player, serverId, version). Кто пишет, проверяет Mojang
-// (sessionserver hasJoined — как при входе на сервер), поэтому отзыв может оставить только лицензионный аккаунт; один
-// отзыв на приложение от игрока (новый заменяет старый). Отзывы — reviews/<id>.json в main (без заявок); сводку
+// Отзывы: POST /review (JSON: app, stars 1..5, text, player, version). Один отзыв на приложение с одного ника и с одного
+// IP: новый от того же ника заменяет старый; с IP, где уже есть отзыв другого ника, — отказ. IP в файл не пишется —
+// только его отпечаток (HMAC с GITHUB_TOKEN, по нему IP не узнать); сравнивается подсеть: IPv4 /24, IPv6 /64. Проверить лицензию у Mojang отсюда нельзя: Mojang
+// не пускает запросы с серверов Cloudflare (HTTP 403). Отзывы — reviews/<id>.json в main (без заявок); сводку
 // reviews/summary.json пересобирает GitHub Actions (build_catalog.py). Удалить отзыв — отредактировать файл на GitHub.
 //
 // Авторство: owners.json в репозитории хранит для каждого приложения отпечаток (SHA-256) секретного ключа автора.
@@ -156,7 +157,6 @@ async function review(request, env) {
   const id = String(body.app || "").toLowerCase();
   const stars = Number(body.stars);
   const player = String(body.player || "");
-  const serverId = String(body.serverId || "");
   const version = String(body.version || "").slice(0, 32).replace(/[^\w.\-]/g, "");
   // Текст: без управляющих символов, переносы — не больше двух подряд.
   const text = String(body.text || "")
@@ -170,23 +170,13 @@ async function review(request, env) {
   if (!Number.isInteger(stars) || stars < 1 || stars > 5) {
     return json({ error: "stars must be 1..5" }, 400);
   }
-  if (!/^[A-Za-z0-9_]{1,16}$/.test(player) || !/^[0-9a-f]{8,40}$/.test(serverId)) {
+  if (!/^[A-Za-z0-9_]{1,16}$/.test(player)) {
     return json({ error: "bad player" }, 400);
   }
-
-  // Это правда этот игрок? Игра только что «вошла» на сервер serverId — Mojang подтверждает.
-  const mojang = await fetch(
-    `https://sessionserver.mojang.com/session/minecraft/hasJoined?username=${encodeURIComponent(player)}&serverId=${serverId}`,
-  );
-  if (mojang.status !== 200) {
-    return json({ error: "Mojang did not confirm the account (licensed Minecraft only)" }, 403);
-  }
-  const profile = await mojang.json();
-  const uuid = String(profile.id || "");
-  const name = String(profile.name || player);
-  if (!/^[0-9a-f]{32}$/.test(uuid)) {
-    return json({ error: "Mojang did not confirm the account" }, 403);
-  }
+  const name = player;
+  const nick = player.toLowerCase();
+  const ip = networkOf(request.headers.get("CF-Connecting-IP") || "");
+  const ipHash = (await hmacHex(env.GITHUB_TOKEN || "blockphone", ip)).slice(0, 24);
 
   const gh = github(env);
   // Приложение должно быть в каталоге.
@@ -210,8 +200,12 @@ async function review(request, env) {
       sha = file.sha;
       reviews = JSON.parse(decodeBase64(file.content)).reviews || [];
     }
-    reviews = reviews.filter((r) => r.uuid !== uuid);
-    reviews.unshift({ uuid, player: name, stars, text, version, time: Date.now() });
+    // С этого IP уже писал другой ник — не принимать (один отзыв с одного IP).
+    if (reviews.some((r) => r.ip === ipHash && String(r.player || "").toLowerCase() !== nick)) {
+      return json({ error: "one_per_ip" }, 403);
+    }
+    reviews = reviews.filter((r) => String(r.player || "").toLowerCase() !== nick);
+    reviews.unshift({ uuid: nick, player: name, stars, text, version, time: Date.now(), ip: ipHash });
     reviews = reviews.slice(0, MAX_REVIEWS);
     const put = await gh(`/contents/${path}`, {
       method: "PUT",
@@ -230,6 +224,25 @@ async function review(request, env) {
     }
   }
   return json({ error: "busy, try again" }, 503);
+}
+
+// Подсеть адреса: IPv4 — первые три числа, IPv6 — сеть /64 (адрес устройства в ней меняется).
+function networkOf(ip) {
+  if (!ip.includes(":")) {
+    // У многих провайдеров внешний IPv4 меняется от запроса к запросу внутри одной подсети — сравниваем /24.
+    return ip.split(".").slice(0, 3).join(".") + ".0/24";
+  }
+  let [head, tail] = ip.split("::");
+  const h = head ? head.split(":") : [];
+  const t = tail !== undefined && tail ? tail.split(":") : [];
+  const groups = tail !== undefined ? [...h, ...Array(Math.max(0, 8 - h.length - t.length)).fill("0"), ...t] : h;
+  return groups.slice(0, 4).map((g) => parseInt(g || "0", 16).toString(16)).join(":") + "::/64";
+}
+
+async function hmacHex(key, text) {
+  const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(key), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const sig = await crypto.subtle.sign("HMAC", k, new TextEncoder().encode(text));
+  return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
 async function sha256hex(text) {
