@@ -43,6 +43,20 @@
       "sha256": "b3cb3bf81886864f233ea362fc2d9e3b6b0bad26d53c63365173fceea32e66b0"
     },
     {
+      "id": "durak_online",
+      "name": "Дурак онлайн",
+      "version": "1.0.0",
+      "author": "OpenAI",
+      "description": "",
+      "permissions": [
+        "multiplayer",
+        "storage"
+      ],
+      "download": "apps/durak_online.zip",
+      "size": 5981,
+      "sha256": "3ed36df54db77f0a5486551b0a4df76f6d18cc3867a8c0d520d1112f6b61303b"
+    },
+    {
       "id": "snake",
       "name": "Змейка",
       "version": "1.0",
