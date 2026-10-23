@@ -59,7 +59,7 @@
     {
       "id": "shashki_online",
       "name": "Шашки онлайн",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "OpenAI",
       "description": "",
       "permissions": [
@@ -67,8 +67,8 @@
         "storage"
       ],
       "download": "apps/shashki_online.zip",
-      "size": 6165,
-      "sha256": "46fd2072d7344cc0c684cff030eec67699da284bd7b4a4bcf904518518b7a940"
+      "size": 6525,
+      "sha256": "c843a5b0de400fbbe56815acfbbb2781b423da01e6ef97cb103b0952c6f62b45"
     },
     {
       "id": "snake",
