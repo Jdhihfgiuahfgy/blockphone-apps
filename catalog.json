@@ -57,6 +57,20 @@
       "sha256": "3ed36df54db77f0a5486551b0a4df76f6d18cc3867a8c0d520d1112f6b61303b"
     },
     {
+      "id": "shashki_online",
+      "name": "Шашки онлайн",
+      "version": "1.0.0",
+      "author": "OpenAI",
+      "description": "",
+      "permissions": [
+        "multiplayer",
+        "storage"
+      ],
+      "download": "apps/shashki_online.zip",
+      "size": 6165,
+      "sha256": "46fd2072d7344cc0c684cff030eec67699da284bd7b4a4bcf904518518b7a940"
+    },
+    {
       "id": "snake",
       "name": "Змейка",
       "version": "1.0",
