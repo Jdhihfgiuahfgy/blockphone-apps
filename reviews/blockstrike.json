@@ -1,0 +1,13 @@
+{
+ "reviews": [
+  {
+   "uuid": "ron_in",
+   "player": "Ron_in",
+   "stars": 1,
+   "text": "Пизда",
+   "version": "1.1",
+   "time": 1792753860969,
+   "ip": "7d038789633494a7b2a952e5"
+  }
+ ]
+}
