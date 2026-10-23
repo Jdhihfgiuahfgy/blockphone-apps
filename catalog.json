@@ -43,6 +43,19 @@
       "sha256": "b3cb3bf81886864f233ea362fc2d9e3b6b0bad26d53c63365173fceea32e66b0"
     },
     {
+      "id": "durak",
+      "name": "Дурак онлайн",
+      "version": "1.0",
+      "author": "",
+      "description": "",
+      "permissions": [
+        "multiplayer"
+      ],
+      "download": "apps/durak.zip",
+      "size": 11528,
+      "sha256": "cee7477cadaf9a33909c3a329a8d4eefd3981bfb0096bcfeda0ebd3db9fd39ee"
+    },
+    {
       "id": "durak_online",
       "name": "Дурак онлайн",
       "version": "1.0.0",
