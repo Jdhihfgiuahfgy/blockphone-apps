@@ -1,6 +1,8 @@
 {
   "_comment": "Общий список прокси Telegram для телефонов BlockPhone (режим «Авто»). Ссылки tg://proxy?server=...&port=...&secret=... или socks5://host:port. Как поднять свой прокси — docs/TELEGRAM_PROXY.md в репозитории мода.",
   "proxies": [
-    "tg://proxy?server=det.qbconnect.link&port=443&secret=ee2289719377039fd587ff66eabcf7a1e36465742e7162636f6e6e6563742e6c696e6b"
+    "tg://proxy?server=det.qbconnect.link&port=443&secret=ee2289719377039fd587ff66eabcf7a1e36465742e7162636f6e6e6563742e6c696e6b",
+    "tg://proxy?server=nlt.qbconnect.link&port=443&secret=ee068e609f839d26c985d1aaa6ec9b39d46e6c742e7162636f6e6e6563742e6c696e6b",
+    "tg://proxy?server=fit.qbconnect.link&port=443&secret=eebe6b96976b256f1fe083e887e1b50e9066696e62617468732e776f726c64"
   ]
 }
