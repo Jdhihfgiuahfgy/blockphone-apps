@@ -30,6 +30,9 @@ export default {
     if (new URL(request.url).pathname === "/review") {
       return review(request, env);
     }
+    if (new URL(request.url).pathname === "/feedback") {
+      return feedback(request, env);
+    }
     const id = (request.headers.get("X-App-Id") || "").toLowerCase();
     const version = (request.headers.get("X-App-Version") || "?").slice(0, 32).replace(/[^\w.\-]/g, "");
     const player = request.headers.get("X-Player") || "";
@@ -170,6 +173,107 @@ function github(env) {
         "Content-Type": "application/json",
       },
     });
+}
+
+// Жалобы и предложения: POST /feedback (JSON: kind bug|idea|complaint, text до 3000, player, mod, minecraft, lang,
+// images — до 4 JPEG в base64). Пишутся одним коммитом в feedback/<дата>/<время>-<ник>-<вид>/ (message.md + 1.jpg …) в
+// репозиторий FEEDBACK_REPO (если задан; иначе — REPO_NAME). Не чаще 3 обращений за 10 минут с одной подсети.
+const FEEDBACK_KINDS = { bug: "Ошибка", idea: "Предложение", complaint: "Жалоба" };
+
+async function feedback(request, env) {
+  const raw = await request.text();
+  if (raw.length > 9 * 1024 * 1024) {
+    return json({ error: "too big" }, 400);
+  }
+  let body;
+  try {
+    body = JSON.parse(raw);
+  } catch (e) {
+    return json({ error: "bad json" }, 400);
+  }
+  const kind = String(body.kind || "");
+  const player = String(body.player || "");
+  const text = String(body.text || "").replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, "").trim().slice(0, 3000);
+  const images = Array.isArray(body.images) ? body.images.slice(0, 4).map(String) : [];
+  if (!FEEDBACK_KINDS[kind] || !/^[A-Za-z0-9_]{1,16}$/.test(player) || text.length < 10) {
+    return json({ error: "bad feedback" }, 400);
+  }
+  for (const img of images) {
+    if (img.length > 2200000 || !/^[A-Za-z0-9+/=]+$/.test(img) || !img.startsWith("/9j/")) {
+      return json({ error: "bad image (JPEG up to 1.5 MB)" }, 400);
+    }
+  }
+
+  // Не чаще 3 обращений за 10 минут с одной подсети (кэш Cloudflare в этом дата-центре).
+  const net = (await hmacHex(env.GITHUB_TOKEN || "blockphone", networkOf(request.headers.get("CF-Connecting-IP") || ""))).slice(0, 24);
+  const cache = caches.default;
+  const key = new Request(`https://blockphone-limit.invalid/feedback/${net}`);
+  const hit = await cache.match(key);
+  const count = hit ? Number(await hit.text()) || 0 : 0;
+  if (count >= 3) {
+    return json({ error: "too often" }, 429);
+  }
+  await cache.put(key, new Response(String(count + 1), { headers: { "Cache-Control": "max-age=600" } }));
+
+  const repo = env.FEEDBACK_REPO || env.REPO_NAME;
+  const gh = (path, init = {}) =>
+    fetch(`https://api.github.com/repos/${env.REPO_OWNER}/${repo}${path}`, {
+      ...init,
+      headers: {
+        Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+        Accept: "application/vnd.github+json",
+        "User-Agent": "blockphone-store",
+        "Content-Type": "application/json",
+      },
+    });
+  const now = new Date();
+  const date = now.toISOString().slice(0, 10);
+  const time = now.toISOString().slice(11, 19).replace(/:/g, "-");
+  const folder = `feedback/${date}/${time}-${player}-${kind}`;
+  const meta = (v) => String(v || "?").slice(0, 40).replace(/[^\w .+\-]/g, "");
+  let md = `# ${FEEDBACK_KINDS[kind]} от ${player}\n\n`;
+  md += `- Время (UTC): ${now.toISOString().replace("T", " ").slice(0, 19)}\n`;
+  md += `- BlockPhone ${meta(body.mod)}, Minecraft ${meta(body.minecraft)}, язык ${meta(body.lang)}\n\n`;
+  md += text.split("\n").map((l) => "> " + l).join("\n") + "\n";
+  images.forEach((_, i) => {
+    md += `\n![Скриншот ${i + 1}](${i + 1}.jpg)\n`;
+  });
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const ref = await gh("/git/ref/heads/main");
+    if (!ref.ok) {
+      return json({ error: "github: cannot read main (" + ref.status + ")" }, 502);
+    }
+    const head = (await ref.json()).object.sha;
+    const commit = await (await gh(`/git/commits/${head}`)).json();
+    const tree = [{ path: `${folder}/message.md`, mode: "100644", type: "blob", content: md }];
+    for (let i = 0; i < images.length; i++) {
+      const blob = await gh("/git/blobs", { method: "POST", body: JSON.stringify({ content: images[i], encoding: "base64" }) });
+      if (!blob.ok) {
+        return json({ error: "github: cannot upload image (" + blob.status + ")" }, 502);
+      }
+      tree.push({ path: `${folder}/${i + 1}.jpg`, mode: "100644", type: "blob", sha: (await blob.json()).sha });
+    }
+    const newTree = await gh("/git/trees", { method: "POST", body: JSON.stringify({ base_tree: commit.tree.sha, tree }) });
+    if (!newTree.ok) {
+      return json({ error: "github: cannot save (" + newTree.status + ")" }, 502);
+    }
+    const newCommit = await gh("/git/commits", {
+      method: "POST",
+      body: JSON.stringify({ message: `${FEEDBACK_KINDS[kind]} от ${player}`, tree: (await newTree.json()).sha, parents: [head] }),
+    });
+    if (!newCommit.ok) {
+      return json({ error: "github: cannot save (" + newCommit.status + ")" }, 502);
+    }
+    const update = await gh("/git/refs/heads/main", { method: "PATCH", body: JSON.stringify({ sha: (await newCommit.json()).sha }) });
+    if (update.ok) {
+      return json({ ok: true });
+    }
+    if (update.status !== 422 && update.status !== 409) {
+      return json({ error: "github: cannot save (" + update.status + ")" }, 502);
+    }
+  }
+  return json({ error: "busy, try again" }, 503);
 }
 
 const MAX_REVIEW_TEXT = 500;
