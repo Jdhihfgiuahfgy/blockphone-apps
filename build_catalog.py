@@ -14,7 +14,10 @@ import sys
 import zipfile
 
 ALLOWED = {".json", ".lua", ".png", ".obj", ".txt", ".md", ".ogg", ".wav", ".mp3"}
-MAX_UNPACKED = 40 * 1024 * 1024
+CATEGORIES = {"games", "tools", "social", "media", "education", "finance", "server", "other"}
+UID = re.compile(r"^[a-z0-9]{6,24}$")
+MAX_UNPACKED = 64 * 1024 * 1024
+MAX_FILES = 1200
 ID = re.compile(r"^[a-z0-9_-]{1,32}$")
 
 
@@ -38,7 +41,7 @@ def read_app(path):
             if os.path.splitext(name)[1].lower() not in ALLOWED:
                 continue
             total += info.file_size
-            if total > MAX_UNPACKED or len(files) > 400:
+            if total > MAX_UNPACKED or len(files) > MAX_FILES:
                 raise ValueError("archive is too big")
             files[name] = z.read(info)
     if "app.json" not in files:
@@ -96,9 +99,31 @@ def build_reviews_summary():
     print("reviews/summary.json:", len(summary), "apps")
 
 
+def previous_uids():
+    """uid приложений из прошлого catalog.json: id → uid (uid нельзя поменять при обновлении)."""
+    try:
+        with open("catalog.json", encoding="utf-8") as f:
+            return {a["id"]: a["uid"] for a in json.load(f).get("apps", []) if a.get("uid")}
+    except Exception:  # noqa: BLE001 — каталога ещё нет
+        return {}
+
+
+def read_changelog(app_id):
+    """changelogs/<id>.json (пишет приёмник при публикации): {"version", "text", "time"} или None."""
+    try:
+        with open(os.path.join("changelogs", app_id + ".json"), encoding="utf-8") as f:
+            data = json.load(f)
+        return {"version": str(data.get("version", "")), "text": str(data.get("text", "")).strip()[:1500],
+                "time": int(data.get("time", 0))}
+    except Exception:  # noqa: BLE001 — чейнджлога нет
+        return None
+
+
 def main():
     check = "--check" in sys.argv
     apps, errors = [], []
+    old_uids = previous_uids()
+    seen_uids = {}
     if check:
         for problem in find_copies():
             errors.append(problem)
@@ -118,8 +143,23 @@ def main():
                 raise ValueError('id in app.json is "%s"' % manifest.get("id"))
             if "script" in manifest and manifest["script"] not in files:
                 raise ValueError("script %s not found" % manifest["script"])
+            uid = str(manifest.get("uid", "")).lower()
+            if uid and not UID.match(uid):
+                raise ValueError('bad uid "%s" (6-24 chars a-z 0-9)' % uid)
+            if app_id in old_uids and uid != old_uids[app_id]:
+                raise ValueError('uid changed from "%s" to "%s" — an update must keep its uid' % (old_uids[app_id], uid))
+            if uid and uid in seen_uids:
+                raise ValueError('uid "%s" is already used by %s' % (uid, seen_uids[uid]))
+            if uid:
+                seen_uids[uid] = app_id
+            category = str(manifest.get("category", "other")).lower()
+            if category not in CATEGORIES:
+                category = "other"
             if check:
-                print("OK", app_id, manifest.get("version", "1.0"))
+                notes = read_changelog(app_id)
+                print("OK", app_id, manifest.get("version", "1.0"), "uid=" + (uid or "-"), "category=" + category)
+                if notes:
+                    print("   changelog", notes["version"] + ":", notes["text"][:200].replace("\n", " / "))
                 continue
             buf = io.BytesIO()
             with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
@@ -141,7 +181,14 @@ def main():
                 "download": "apps/" + app_id + ".zip",
                 "size": len(data),
                 "sha256": hashlib.sha256(data).hexdigest(),
+                "category": category,
             }
+            if uid:
+                entry["uid"] = uid
+            notes = read_changelog(app_id)
+            if notes and notes["text"]:
+                entry["changelog"] = notes["text"]
+                entry["updated"] = notes["time"]
             if "icon.png" in files:
                 with open(os.path.join("icons", app_id + ".png"), "wb") as f:
                     f.write(files["icon.png"])

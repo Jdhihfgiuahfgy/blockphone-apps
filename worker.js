@@ -17,7 +17,7 @@
 // Обновить приложение может только тот, у кого этот ключ (он есть только на устройстве автора). Приложения, которые лежат
 // в apps-src, но не записаны в owners.json (стартовые или загруженные владельцем вручную), с телефона не обновить.
 
-const MAX_ZIP = 10 * 1024 * 1024;
+const MAX_ZIP = 25 * 1024 * 1024;
 
 export default {
   async fetch(request, env) {
@@ -34,6 +34,21 @@ export default {
     const version = (request.headers.get("X-App-Version") || "?").slice(0, 32).replace(/[^\w.\-]/g, "");
     const player = request.headers.get("X-Player") || "";
     const authorKey = request.headers.get("X-Author-Key") || "";
+    const uid = (request.headers.get("X-App-Uid") || "").toLowerCase();
+    // Чейнджлог («что нового») — base64 UTF-8, пишет автор при публикации.
+    let changelog = "";
+    try {
+      changelog = decodeBase64(request.headers.get("X-Changelog") || "")
+        .replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, "")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim()
+        .slice(0, 1500);
+    } catch (e) {
+      return json({ error: "bad changelog" }, 400);
+    }
+    if (uid && !/^[a-z0-9]{6,24}$/.test(uid)) {
+      return json({ error: "bad app uid" }, 400);
+    }
     if (!/^[0-9a-f]{64}$/.test(authorKey)) {
       return json({ error: "no author key (update BlockPhone)" }, 400);
     }
@@ -45,7 +60,7 @@ export default {
     }
     const body = new Uint8Array(await request.arrayBuffer());
     if (body.length < 22 || body.length > MAX_ZIP) {
-      return json({ error: "archive must be 1 byte .. 10 MB" }, 400);
+      return json({ error: "archive must be 1 byte .. 25 MB" }, 400);
     }
     if (body[0] !== 0x50 || body[1] !== 0x4b) {
       return json({ error: "not a zip archive" }, 400);
@@ -94,6 +109,21 @@ export default {
     if (!r.ok) {
       return json({ error: "github: cannot upload (" + r.status + ")" }, 502);
     }
+    if (changelog) {
+      // changelogs/<id>.json — build_catalog.py кладёт текст в catalog.json («В последнем обновлении»).
+      const notesPath = `changelogs/${id}.json`;
+      const notesOld = await gh(`/contents/${notesPath}?ref=${encodeURIComponent(branch)}`);
+      const notesSha = notesOld.ok ? (await notesOld.json()).sha : undefined;
+      const notes = JSON.stringify({ version, text: changelog, time: Date.now(), uid }, null, 1);
+      r = await gh(`/contents/${notesPath}`, {
+        method: "PUT",
+        body: JSON.stringify({ message: `Что нового в ${id} ${version}`, content: btoa(unescape(encodeURIComponent(notes))),
+          branch, sha: notesSha }),
+      });
+      if (!r.ok) {
+        return json({ error: "github: cannot save changelog (" + r.status + ")" }, 502);
+      }
+    }
     if (!owners[id]) {
       // Новое приложение: записать автора (вступит в силу, когда заявку одобрят).
       owners[id] = keyHash;
@@ -114,6 +144,8 @@ export default {
         base: "main",
         body:
           `Отправлено из телефона игроком **${player}**.\n\n` +
+          (uid ? `uid: \`${uid}\`\n\n` : "") +
+          (changelog ? `### Что нового в версии ${version}\n\n${changelog.split("\n").map((l) => "> " + l).join("\n")}\n\n` : "") +
           `Проверка «Check submission» ниже покажет, всё ли в порядке с архивом. ` +
           `Посмотрите файлы и нажмите **Merge pull request** — приложение появится в Магазине. ` +
           `Не подходит — **Close pull request**.`,
