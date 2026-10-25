@@ -12,7 +12,8 @@
       ],
       "download": "apps/blockblast.zip",
       "size": 4829,
-      "sha256": "852dc383ac0e8f522d0ce600ba9cbeba5c14044b4d08b00b24ca6d6b81cff2dd"
+      "sha256": "852dc383ac0e8f522d0ce600ba9cbeba5c14044b4d08b00b24ca6d6b81cff2dd",
+      "category": "other"
     },
     {
       "id": "blockstrike",
@@ -27,6 +28,8 @@
       "download": "apps/blockstrike.zip",
       "size": 2839639,
       "sha256": "8335f6bd2bcb902d64e6859d70a0f3144a527a99b3297220bc96772d7464d6f4",
+      "category": "games",
+      "uid": "bpxh4ueb3x6k",
       "icon": "icons/blockstrike.png"
     },
     {
@@ -40,7 +43,8 @@
       ],
       "download": "apps/doom.zip",
       "size": 190928,
-      "sha256": "b3cb3bf81886864f233ea362fc2d9e3b6b0bad26d53c63365173fceea32e66b0"
+      "sha256": "b3cb3bf81886864f233ea362fc2d9e3b6b0bad26d53c63365173fceea32e66b0",
+      "category": "other"
     },
     {
       "id": "durak",
@@ -53,7 +57,9 @@
       ],
       "download": "apps/durak.zip",
       "size": 11528,
-      "sha256": "cee7477cadaf9a33909c3a329a8d4eefd3981bfb0096bcfeda0ebd3db9fd39ee"
+      "sha256": "cee7477cadaf9a33909c3a329a8d4eefd3981bfb0096bcfeda0ebd3db9fd39ee",
+      "category": "games",
+      "uid": "bpjuf6zk5vyc"
     },
     {
       "id": "durak_online",
@@ -67,7 +73,8 @@
       ],
       "download": "apps/durak_online.zip",
       "size": 5981,
-      "sha256": "3ed36df54db77f0a5486551b0a4df76f6d18cc3867a8c0d520d1112f6b61303b"
+      "sha256": "3ed36df54db77f0a5486551b0a4df76f6d18cc3867a8c0d520d1112f6b61303b",
+      "category": "other"
     },
     {
       "id": "shashki_online",
@@ -81,7 +88,8 @@
       ],
       "download": "apps/shashki_online.zip",
       "size": 6525,
-      "sha256": "c843a5b0de400fbbe56815acfbbb2781b423da01e6ef97cb103b0952c6f62b45"
+      "sha256": "c843a5b0de400fbbe56815acfbbb2781b423da01e6ef97cb103b0952c6f62b45",
+      "category": "other"
     },
     {
       "id": "snake",
@@ -94,7 +102,8 @@
       ],
       "download": "apps/snake.zip",
       "size": 2014,
-      "sha256": "7283beceb9ab8a4afe279e51ca0107b04424cbe1e3974df5922754b2cb6176d7"
+      "sha256": "7283beceb9ab8a4afe279e51ca0107b04424cbe1e3974df5922754b2cb6176d7",
+      "category": "other"
     },
     {
       "id": "tictactoe",
@@ -107,7 +116,8 @@
       ],
       "download": "apps/tictactoe.zip",
       "size": 2383,
-      "sha256": "80e7dd301b2caddd4eed31b7664e2eca107d514c9dc0a628e128c22abcd7bf15"
+      "sha256": "80e7dd301b2caddd4eed31b7664e2eca107d514c9dc0a628e128c22abcd7bf15",
+      "category": "other"
     },
     {
       "id": "weather-web",
@@ -121,7 +131,8 @@
       ],
       "download": "apps/weather-web.zip",
       "size": 1495,
-      "sha256": "d43b3a99247358eecabb42cbad39c2947250b1843fa81147846df109523e1d8b"
+      "sha256": "d43b3a99247358eecabb42cbad39c2947250b1843fa81147846df109523e1d8b",
+      "category": "other"
     }
   ]
 }
