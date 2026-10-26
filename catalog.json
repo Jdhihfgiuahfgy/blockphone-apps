@@ -16,23 +16,6 @@
       "category": "other"
     },
     {
-      "id": "blockstrike",
-      "name": "Block Strike",
-      "version": "2.0",
-      "author": "BlockPhone",
-      "description": "Командный 3D-шутер по мотивам CS2: закладка бомбы, весь арсенал CS2 (43 предмета: пистолеты, ПП, дробовики, пулемёты, винтовки, снайперки, молотов, Zeus), 3D-модели оружия и рук, цельная карта «Квартал» с машинами, ящиками и воротами и ещё 13 карт-городов, объёмный звук, запечённый свет с тенями, боты и игра по сети.",
-      "permissions": [
-        "storage",
-        "multiplayer"
-      ],
-      "download": "apps/blockstrike.zip",
-      "size": 13326948,
-      "sha256": "57ee314449e491fc8a921f8f24b87e21ea1fc49fe8a1f97414ab07cef532d21d",
-      "category": "games",
-      "uid": "bp85qdrhzmg2",
-      "icon": "icons/blockstrike.png"
-    },
-    {
       "id": "browser",
       "name": "Браузер",
       "version": "1.0",
