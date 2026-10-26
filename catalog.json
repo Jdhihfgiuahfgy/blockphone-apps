@@ -16,23 +16,6 @@
       "category": "other"
     },
     {
-      "id": "blockstrike",
-      "name": "Block Strike",
-      "version": "1.3",
-      "author": "BlockPhone",
-      "description": "Командный 3D-шутер по мотивам CS: закладка бомбы, 13 видов оружия, гранаты, 13 карт (большие многоуровневые Каньон, Оазис, Вилла и Shortdust для «Напарников»), объёмный звук, боты и игра по сети.",
-      "permissions": [
-        "storage",
-        "multiplayer"
-      ],
-      "download": "apps/blockstrike.zip",
-      "size": 2839639,
-      "sha256": "8335f6bd2bcb902d64e6859d70a0f3144a527a99b3297220bc96772d7464d6f4",
-      "category": "games",
-      "uid": "bpxh4ueb3x6k",
-      "icon": "icons/blockstrike.png"
-    },
-    {
       "id": "doom",
       "name": "DOOM",
       "version": "2.0",
