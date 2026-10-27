@@ -2,6 +2,24 @@
   "name": "BlockPhone — официальный каталог",
   "apps": [
     {
+      "id": "astrum_mortis",
+      "name": "Astrum Mortis",
+      "version": "1.0",
+      "author": "BlockPhone",
+      "description": "Мессенджер клана Astrum Mortis: общий чат клана, личные сообщения и группы. Работает на любом сервере и в одиночной игре. Вход — по коду-приглашению от главы или админа клана.",
+      "permissions": [
+        "internet",
+        "storage",
+        "clipboard"
+      ],
+      "download": "apps/astrum_mortis.zip",
+      "size": 28073,
+      "sha256": "79aa7da3c1f9ec5889769787b2a51e5a62ca12ecc21f3d31c97333283dff349b",
+      "category": "social",
+      "uid": "bp79cekkin7u",
+      "icon": "icons/astrum_mortis.png"
+    },
+    {
       "id": "blockblast",
       "name": "Block Blast",
       "version": "1.0.0",
@@ -14,6 +32,25 @@
       "size": 4829,
       "sha256": "852dc383ac0e8f522d0ce600ba9cbeba5c14044b4d08b00b24ca6d6b81cff2dd",
       "category": "other"
+    },
+    {
+      "id": "blockstrike",
+      "name": "Block Strike",
+      "version": "2.1.2",
+      "author": "BlockPhone",
+      "description": "Командный 3D-шутер по мотивам CS2: закладка бомбы, весь арсенал CS2 (43 предмета: пистолеты, ПП, дробовики, пулемёты, винтовки, снайперки, молотов, Zeus), 3D-модели оружия и рук, цельная карта «Квартал» с машинами, ящиками и воротами и ещё 13 карт-городов, объёмный звук и музыка, настройки звука и прицела, закрытые серверы по паролю, запечённый свет с тенями, боты и игра по сети.",
+      "permissions": [
+        "storage",
+        "multiplayer"
+      ],
+      "download": "apps/blockstrike.zip",
+      "size": 20861003,
+      "sha256": "76a0a636c2be36b91378af30b4a61d1cb5e5acd8b2f0024f3302b9661ba27fa3",
+      "category": "games",
+      "uid": "bpytd2haminx",
+      "changelog": "Много чего исправлено, но по прежнему приложение хуйня",
+      "updated": 1793042987683,
+      "icon": "icons/blockstrike.png"
     },
     {
       "id": "browser",
