@@ -2,6 +2,30 @@
   "name": "BlockPhone — официальный каталог",
   "apps": [
     {
+      "id": "astrum_mortis",
+      "name": "Astrum Mortis",
+      "version": "1.1",
+      "author": "BlockPhone",
+      "description": "Мессенджер клана Astrum Mortis: общий чат клана, личные сообщения и группы, фото, голосовые и стикеры, уведомления. Работает на любом сервере и в одиночной игре, в фоне — с запуска игры. Вход — по коду-приглашению от главы или админа клана.",
+      "permissions": [
+        "internet",
+        "storage",
+        "clipboard",
+        "background",
+        "notifications",
+        "photos",
+        "microphone"
+      ],
+      "download": "apps/astrum_mortis.zip",
+      "size": 195881,
+      "sha256": "de0ad9056167dd86d37f766ab6262c1cdc1e025618591ba20ff0c7195fdd3f60",
+      "category": "social",
+      "uid": "bp3bf9rnqqm5",
+      "changelog": "Добавлены фотографии, стикеры. Фикс багов",
+      "updated": 1793293681196,
+      "icon": "icons/astrum_mortis.png"
+    },
+    {
       "id": "blockblast",
       "name": "Block Blast",
       "version": "1.0.0",
