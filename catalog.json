@@ -42,20 +42,21 @@
     {
       "id": "blockstrike",
       "name": "Block Strike",
-      "version": "2.2.0",
+      "version": "2.2.1",
       "author": "BlockPhone",
       "description": "Командный 3D-шутер по мотивам CS2: закладка бомбы, весь арсенал CS2 (43 предмета: пистолеты, ПП, дробовики, пулемёты, винтовки, снайперки, молотов, Zeus), 3D-модели оружия и рук, цельная карта «Квартал» с машинами, ящиками и воротами и ещё 13 карт-городов, объёмный звук и музыка, настройки звука и прицела, закрытые серверы по паролю, запечённый свет с тенями, боты и игра по сети.",
       "permissions": [
         "storage",
-        "multiplayer"
+        "multiplayer",
+        "clipboard"
       ],
       "download": "apps/blockstrike.zip",
-      "size": 20862205,
-      "sha256": "43687c70efec6215d18428931d898fd027e61ecb01eef441ac3a2f371a6b4bc0",
+      "size": 20862862,
+      "sha256": "0250d75e355cd62139410a3c49e0169cc9918b5ff918c8c2954dd9f32cd337eb",
       "category": "games",
       "uid": "bpytd2haminx",
-      "changelog": "Добавлен мультиплеер, независимый от сервера",
-      "updated": 1793303399000,
+      "changelog": "Фикс лагов в онлайне",
+      "updated": 1793304994011,
       "icon": "icons/blockstrike.png"
     },
     {
