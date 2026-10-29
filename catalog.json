@@ -18,11 +18,11 @@
       ],
       "download": "apps/astrum_mortis.zip",
       "size": 195881,
-      "sha256": "de0ad9056167dd86d37f766ab6262c1cdc1e025618591ba20ff0c7195fdd3f60",
+      "sha256": "31054990f52df8167a0caed48d32103667611acf5f1f9c4a34aa10bc300e69af",
       "category": "social",
       "uid": "bp3bf9rnqqm5",
-      "changelog": "Добавлены фотографии, стикеры. Фикс багов",
-      "updated": 1793293681196,
+      "changelog": "Фикс багов. Добавление отправки фото и стикеров",
+      "updated": 1793298029400,
       "icon": "icons/astrum_mortis.png"
     },
     {
