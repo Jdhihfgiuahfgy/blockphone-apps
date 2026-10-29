@@ -99,11 +99,11 @@ def build_reviews_summary():
     print("reviews/summary.json:", len(summary), "apps")
 
 
-def previous_uids():
-    """uid приложений из прошлого catalog.json: id → uid (uid нельзя поменять при обновлении)."""
+def previous_entries():
+    """Записи прошлого catalog.json: id → запись (uid нельзя поменять при обновлении; сломанное обновление — оставить старую)."""
     try:
         with open("catalog.json", encoding="utf-8") as f:
-            return {a["id"]: a["uid"] for a in json.load(f).get("apps", []) if a.get("uid")}
+            return {a["id"]: a for a in json.load(f).get("apps", []) if a.get("id")}
     except Exception:  # noqa: BLE001 — каталога ещё нет
         return {}
 
@@ -122,7 +122,8 @@ def read_changelog(app_id):
 def main():
     check = "--check" in sys.argv
     apps, errors = [], []
-    old_uids = previous_uids()
+    old_entries = previous_entries()
+    old_uids = {k: v["uid"] for k, v in old_entries.items() if v.get("uid")}
     seen_uids = {}
     if check:
         for problem in find_copies():
@@ -198,6 +199,14 @@ def main():
         except Exception as e:  # noqa: BLE001 — показать любую ошибку архива
             errors.append("%s: %s" % (file, e))
             print("ERROR", file, e)
+            # Обновление не прошло проверку — в каталоге остаётся прошлая версия (её архив в apps/ не тронут),
+            # а не пропадает приложение целиком.
+            old = old_entries.get(app_id)
+            if not check and old and os.path.isfile(os.path.join("apps", app_id + ".zip")):
+                apps.append(old)
+                if old.get("uid"):
+                    seen_uids[old["uid"]] = app_id
+                print("KEEP", app_id, old.get("version"), "(previous version stays)")
     if check:
         sys.exit(1 if errors else 0)
     build_reviews_summary()
