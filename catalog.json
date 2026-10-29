@@ -4,7 +4,7 @@
     {
       "id": "astrum_mortis",
       "name": "Astrum Mortis",
-      "version": "1.1",
+      "version": "1.2",
       "author": "BlockPhone",
       "description": "Мессенджер клана Astrum Mortis: общий чат клана, личные сообщения и группы, фото, голосовые и стикеры, уведомления. Работает на любом сервере и в одиночной игре, в фоне — с запуска игры. Вход — по коду-приглашению от главы или админа клана.",
       "permissions": [
@@ -17,12 +17,12 @@
         "microphone"
       ],
       "download": "apps/astrum_mortis.zip",
-      "size": 195881,
-      "sha256": "31054990f52df8167a0caed48d32103667611acf5f1f9c4a34aa10bc300e69af",
+      "size": 215986,
+      "sha256": "05a1aaba295e41f9c4284e72dfd08aa80163a820b09e0c50df2d1553843dcda5",
       "category": "social",
       "uid": "bp3bf9rnqqm5",
-      "changelog": "Фикс багов. Добавление отправки фото и стикеров",
-      "updated": 1793298029400,
+      "changelog": "Стикеры, реакции",
+      "updated": 1793300836694,
       "icon": "icons/astrum_mortis.png"
     },
     {
