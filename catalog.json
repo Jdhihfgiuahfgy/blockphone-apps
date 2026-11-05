@@ -107,35 +107,6 @@
       "icon": "icons/racing.png"
     },
     {
-      "id": "shashki_online",
-      "name": "Шашки онлайн",
-      "version": "1.0.1",
-      "author": "OpenAI",
-      "description": "",
-      "permissions": [
-        "multiplayer",
-        "storage"
-      ],
-      "download": "apps/shashki_online.zip",
-      "size": 6525,
-      "sha256": "c843a5b0de400fbbe56815acfbbb2781b423da01e6ef97cb103b0952c6f62b45",
-      "category": "other"
-    },
-    {
-      "id": "snake",
-      "name": "Змейка",
-      "version": "1.0",
-      "author": "BlockPhone",
-      "description": "Классическая змейка: экран набок, клавиши, рекорд.",
-      "permissions": [
-        "storage"
-      ],
-      "download": "apps/snake.zip",
-      "size": 2014,
-      "sha256": "7283beceb9ab8a4afe279e51ca0107b04424cbe1e3974df5922754b2cb6176d7",
-      "category": "other"
-    },
-    {
       "id": "tictactoe",
       "name": "Крестики-нолики",
       "version": "1.0",
