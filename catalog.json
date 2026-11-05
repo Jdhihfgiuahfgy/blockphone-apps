@@ -105,35 +105,6 @@
       "sha256": "687b73de49db5dd785150d53548f1770b0d3717f148f335306a4b4e0141ce46f",
       "category": "games",
       "icon": "icons/racing.png"
-    },
-    {
-      "id": "tictactoe",
-      "name": "Крестики-нолики",
-      "version": "1.0",
-      "author": "BlockPhone",
-      "description": "Крестики-нолики с другом на сервере.",
-      "permissions": [
-        "multiplayer"
-      ],
-      "download": "apps/tictactoe.zip",
-      "size": 2383,
-      "sha256": "80e7dd301b2caddd4eed31b7664e2eca107d514c9dc0a628e128c22abcd7bf15",
-      "category": "other"
-    },
-    {
-      "id": "weather-web",
-      "name": "Погода в мире",
-      "version": "1.0",
-      "author": "BlockPhone",
-      "description": "Настоящая погода из интернета (пример своего сайта или API).",
-      "permissions": [
-        "internet",
-        "storage"
-      ],
-      "download": "apps/weather-web.zip",
-      "size": 1495,
-      "sha256": "d43b3a99247358eecabb42cbad39c2947250b1843fa81147846df109523e1d8b",
-      "category": "other"
     }
   ]
 }
