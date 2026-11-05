@@ -122,7 +122,7 @@
     {
       "id": "racing",
       "name": "Блочные гонки",
-      "version": "1.0",
+      "version": "1.1",
       "author": "BlockPhone",
       "description": "3D-гонки с камерой за машинкой: три трассы, боты, до 4 игроков. «Режим на экране» — игра на экране в мире, друзья подключаются к лобби, экран делится пополам, телефон — джойстик.",
       "permissions": [
@@ -131,8 +131,8 @@
         "display"
       ],
       "download": "apps/racing.zip",
-      "size": 1402773,
-      "sha256": "e97ff07c78b2f81ac5094f550a3a5381a3e8cd31c9fcdcf989f7ebd862c119eb",
+      "size": 1671646,
+      "sha256": "687b73de49db5dd785150d53548f1770b0d3717f148f335306a4b4e0141ce46f",
       "category": "games",
       "icon": "icons/racing.png"
     },
