@@ -2,7 +2,9 @@
 name: Check submission
 on:
   pull_request:
-    paths: ["apps-src/**"]
+    paths: ["apps-src/**", "changelogs/**"]
+permissions:
+  contents: read
 jobs:
   check:
     runs-on: ubuntu-latest

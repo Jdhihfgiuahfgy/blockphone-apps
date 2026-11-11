@@ -61,6 +61,12 @@ export default {
     if (!/^[A-Za-z0-9_]{1,16}$/.test(player)) {
       return json({ error: "bad player name" }, 400);
     }
+    if (Number(request.headers.get("Content-Length") || 0) > MAX_ZIP) {
+      return json({ error: "archive must be 1 byte .. 25 MB" }, 400);
+    }
+    if (await tooOften(request, env, "publish", 6, 3600)) {
+      return json({ error: "too often, try again in an hour" }, 429);
+    }
     const body = new Uint8Array(await request.arrayBuffer());
     if (body.length < 22 || body.length > MAX_ZIP) {
       return json({ error: "archive must be 1 byte .. 25 MB" }, 400);
@@ -148,7 +154,7 @@ export default {
         body:
           `Отправлено из телефона игроком **${player}**.\n\n` +
           (uid ? `uid: \`${uid}\`\n\n` : "") +
-          (changelog ? `### Что нового в версии ${version}\n\n${changelog.split("\n").map((l) => "> " + l).join("\n")}\n\n` : "") +
+          (changelog ? `### Что нового в версии ${version}\n\n${quiet(changelog).split("\n").map((l) => "> " + l).join("\n")}\n\n` : "") +
           `Проверка «Check submission» ниже покажет, всё ли в порядке с архивом. ` +
           `Посмотрите файлы и нажмите **Merge pull request** — приложение появится в Магазине. ` +
           `Не подходит — **Close pull request**.`,
@@ -175,6 +181,7 @@ function github(env) {
     });
 }
 
+// Не чаще: публикация — 6 в час, отзыв — 6 за 10 минут, обращение — 3 за 10 минут с одной подсети (tooOften).
 // Жалобы и предложения: POST /feedback (JSON: kind bug|idea|complaint, text до 3000, player, mod, minecraft, lang,
 // images — до 4 JPEG в base64). Пишутся одним коммитом в feedback/<дата>/<время>-<ник>-<вид>/ (message.md + 1.jpg …) в
 // репозиторий FEEDBACK_REPO (если задан; иначе — REPO_NAME). Не чаще 3 обращений за 10 минут с одной подсети.
@@ -205,15 +212,9 @@ async function feedback(request, env) {
   }
 
   // Не чаще 3 обращений за 10 минут с одной подсети (кэш Cloudflare в этом дата-центре).
-  const net = (await hmacHex(env.GITHUB_TOKEN || "blockphone", networkOf(request.headers.get("CF-Connecting-IP") || ""))).slice(0, 24);
-  const cache = caches.default;
-  const key = new Request(`https://blockphone-limit.invalid/feedback/${net}`);
-  const hit = await cache.match(key);
-  const count = hit ? Number(await hit.text()) || 0 : 0;
-  if (count >= 3) {
+  if (await tooOften(request, env, "feedback", 3, 600)) {
     return json({ error: "too often" }, 429);
   }
-  await cache.put(key, new Response(String(count + 1), { headers: { "Cache-Control": "max-age=600" } }));
 
   const repo = env.FEEDBACK_REPO || env.REPO_NAME;
   const gh = (path, init = {}) =>
@@ -234,7 +235,7 @@ async function feedback(request, env) {
   let md = `# ${FEEDBACK_KINDS[kind]} от ${player}\n\n`;
   md += `- Время (UTC): ${now.toISOString().replace("T", " ").slice(0, 19)}\n`;
   md += `- BlockPhone ${meta(body.mod)}, Minecraft ${meta(body.minecraft)}, язык ${meta(body.lang)}\n\n`;
-  md += text.split("\n").map((l) => "> " + l).join("\n") + "\n";
+  md += quiet(text).split("\n").map((l) => "> " + l).join("\n") + "\n";
   images.forEach((_, i) => {
     md += `\n![Скриншот ${i + 1}](${i + 1}.jpg)\n`;
   });
@@ -309,6 +310,9 @@ async function review(request, env) {
   if (!/^[A-Za-z0-9_]{1,16}$/.test(player)) {
     return json({ error: "bad player" }, 400);
   }
+  if (await tooOften(request, env, "review", 6, 600)) {
+    return json({ error: "too often" }, 429);
+  }
   const name = player;
   const nick = player.toLowerCase();
   const ip = networkOf(request.headers.get("CF-Connecting-IP") || "");
@@ -360,6 +364,26 @@ async function review(request, env) {
     }
   }
   return json({ error: "busy, try again" }, 503);
+}
+
+// Ограничение частоты: не больше max обращений вида bucket за seconds с одной подсети (кэш Cloudflare этого
+// дата-центра; грубая защита от спама заявками, отзывами и обращениями — каждое из них пишет в репозиторий).
+async function tooOften(request, env, bucket, max, seconds) {
+  const net = (await hmacHex(env.GITHUB_TOKEN || "blockphone", networkOf(request.headers.get("CF-Connecting-IP") || ""))).slice(0, 24);
+  const cache = caches.default;
+  const key = new Request(`https://blockphone-limit.invalid/${bucket}/${net}`);
+  const hit = await cache.match(key);
+  const count = hit ? Number(await hit.text()) || 0 : 0;
+  if (count >= max) {
+    return true;
+  }
+  await cache.put(key, new Response(String(count + 1), { headers: { "Cache-Control": `max-age=${seconds}` } }));
+  return false;
+}
+
+// Текст игрока в Markdown на GitHub: «@ник» никого не упоминает (невидимый пробел после @).
+function quiet(text) {
+  return text.replace(/@/g, "@\u200b");
 }
 
 // Подсеть адреса: IPv4 — первые три числа, IPv6 — сеть /64 (адрес устройства в ней меняется).
